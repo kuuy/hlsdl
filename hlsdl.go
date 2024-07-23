@@ -50,7 +50,7 @@ type DownloadResult struct {
   SeqId uint64
 }
 
-type AESDecrypt func(crypted []byte, key []byte) ([]byte, error)
+type AESDecrypt func(ciphertext []byte, key []byte, iv []byte) ([]byte, error)
 
 func New(hlsURL string, headers map[string]string, dir, filename string, workers int, enableBar bool) *HlsDl {
   if filename == "" {
@@ -241,7 +241,7 @@ func (hlsDl *HlsDl) decrypt(segment *Segment) ([]byte, error) {
       return nil, err
     }
     if hlsDl.aesDecrypt != nil {
-      data, err = hlsDl.aesDecrypt(data, key)
+      data, err = hlsDl.aesDecrypt(data, key, iv)
     } else {
       data, err = decryptAES128(data, key, iv)
     }
