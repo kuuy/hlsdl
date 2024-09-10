@@ -215,10 +215,12 @@ func (hlsDl *HlsDl) Context(context func(ctx context.Context, network, addr stri
 }
 
 func (hlsDl *HlsDl) Download() (string, error) {
+  log.Println("download video now", hlsDl.hlsURL)
   segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers)
   if err != nil {
     return "", err
   }
+  log.Println("download video segments now")
   segmentsDir := filepath.Join(hlsDl.dir, fmt.Sprintf("%d", hlsDl.startTime))
   if err := os.MkdirAll(segmentsDir, os.ModePerm); err != nil {
     return "", err
