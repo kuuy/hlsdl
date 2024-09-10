@@ -204,6 +204,11 @@ func (hlsDl *HlsDl) join(segmentsDir string, segments []*Segment) (string, error
   return outFile, nil
 }
 
+func (hlsDl *HlsDl) Proxy(proxyUrl string) error {
+  hlsDl.client.SetProxy(proxyUrl)
+  return nil
+}
+
 func (hlsDl *HlsDl) Download() (string, error) {
   segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers)
   if err != nil {
