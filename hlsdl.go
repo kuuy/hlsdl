@@ -1,10 +1,12 @@
 package hlsdl
 
 import (
+  "context"
   "errors"
   "fmt"
   "io"
   "log"
+  "net"
   "net/http"
   "os"
   "path/filepath"
@@ -204,9 +206,12 @@ func (hlsDl *HlsDl) join(segmentsDir string, segments []*Segment) (string, error
   return outFile, nil
 }
 
-func (hlsDl *HlsDl) Proxy(proxyUrl string) error {
-  hlsDl.client.SetProxy(proxyUrl)
-  return nil
+func (hlsDl *HlsDl) Context(context func(ctx context.Context, network, addr string) (net.Conn, error)) (err error) {
+  transport, err := hlsDl.client.Transport()
+  if err == nil {
+    transport.DialContext = context
+  }
+  return
 }
 
 func (hlsDl *HlsDl) Download() (string, error) {
