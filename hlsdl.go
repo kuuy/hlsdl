@@ -243,11 +243,10 @@ func (hlsDl *HlsDl) DownloadSegments() error {
     return err
   }
   log.Println("download video segments now")
-  segmentsDir := filepath.Join(hlsDl.dir, fmt.Sprintf("%d", hlsDl.startTime))
-  if err := os.MkdirAll(segmentsDir, os.ModePerm); err != nil {
+  if err := os.MkdirAll(hlsDl.dir, os.ModePerm); err != nil {
     return err
   }
-  if err := hlsDl.downloadSegments(segmentsDir, segs); err != nil {
+  if err := hlsDl.downloadSegments(hlsDl.dir, segs); err != nil {
     return err
   }
 
