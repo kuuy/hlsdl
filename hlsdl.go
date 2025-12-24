@@ -236,6 +236,24 @@ func (hlsDl *HlsDl) Download() (string, error) {
   return fp, nil
 }
 
+func (hlsDl *HlsDl) DownloadSegments() error {
+  log.Println("download video segments now", hlsDl.hlsURL)
+  segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers)
+  if err != nil {
+    return err
+  }
+  log.Println("download video segments now")
+  segmentsDir := filepath.Join(hlsDl.dir, fmt.Sprintf("%d", hlsDl.startTime))
+  if err := os.MkdirAll(segmentsDir, os.ModePerm); err != nil {
+    return err
+  }
+  if err := hlsDl.downloadSegments(segmentsDir, segs); err != nil {
+    return err
+  }
+
+  return nil
+}
+
 // Decrypt descryps a segment
 func (hlsDl *HlsDl) decrypt(segment *Segment) ([]byte, error) {
   file, err := os.Open(segment.Path)
