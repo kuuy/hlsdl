@@ -2,6 +2,7 @@ package hlsdl
 
 import (
   "context"
+  "crypto/tls"
   "errors"
   "fmt"
   "io"
@@ -61,7 +62,7 @@ func New(hlsURL string, headers map[string]string, dir, filename string, workers
   hlsdl := &HlsDl{
     hlsURL:    hlsURL,
     dir:       dir,
-    client:    resty.New(),
+    client:    resty.New().SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}),
     workers:   workers,
     enableBar: enableBar,
     headers:   headers,

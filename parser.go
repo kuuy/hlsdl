@@ -2,6 +2,7 @@ package hlsdl
 
 import (
   "bytes"
+  "crypto/tls"
   "errors"
   "log"
   "net/url"
@@ -64,7 +65,7 @@ func parseHlsSegments(hlsURL string, headers map[string]string) ([]*Segment, err
 }
 
 func getM3u8ListType(url string, headers map[string]string) (m3u8.Playlist, m3u8.ListType, error) {
-  client := resty.New()
+  client := resty.New().SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
   client.SetRetryCount(5).SetRetryWaitTime(time.Second)
   resp, err := client.R().SetHeaders(headers).Get(url)
   if err != nil {
