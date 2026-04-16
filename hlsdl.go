@@ -86,6 +86,10 @@ func (hlsDl *HlsDl) AES128Decrypt(aesDecrypt AESDecrypt) {
   hlsDl.aesDecrypt = aesDecrypt
 }
 
+func (hlsDl *HlsDl) Proxy(proxyUrl string) {
+  hlsDl.client.SetProxy(proxyUrl)
+}
+
 func (hlsDl *HlsDl) downloadSegment(segment *Segment) error {
   hlsDl.client.SetRetryCount(5).SetRetryWaitTime(time.Second)
   resp, err := hlsDl.client.R().SetHeaders(hlsDl.headers).SetOutput(segment.Path).Get(segment.URI)
