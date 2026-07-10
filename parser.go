@@ -13,13 +13,13 @@ import (
   "github.com/grafov/m3u8"
 )
 
-func parseHlsSegments(hlsURL string, headers map[string]string) ([]*Segment, error) {
+func parseHlsSegments(hlsURL string, headers map[string]string, client *resty.Client) ([]*Segment, error) {
   baseURL, err := url.Parse(hlsURL)
   if err != nil {
     return nil, errors.New("Invalid m3u8 url")
   }
 
-  p, t, err := getM3u8ListType(hlsURL, headers)
+  p, t, err := getM3u8ListType(hlsURL, headers, client)
   if err != nil {
     log.Println("parse segemnt failed", err)
     return nil, err
@@ -64,9 +64,11 @@ func parseHlsSegments(hlsURL string, headers map[string]string) ([]*Segment, err
   return segments, nil
 }
 
-func getM3u8ListType(url string, headers map[string]string) (m3u8.Playlist, m3u8.ListType, error) {
-  client := resty.New().SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-  client.SetRetryCount(5).SetRetryWaitTime(time.Second)
+func getM3u8ListType(url string, headers map[string]string, client *resty.Client) (m3u8.Playlist, m3u8.ListType, error) {
+  if client == nil {
+    client = resty.New().SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+    client.SetRetryCount(5).SetRetryWaitTime(time.Second)
+  }
   resp, err := client.R().SetHeaders(headers).Get(url)
   if err != nil {
     return nil, 0, err

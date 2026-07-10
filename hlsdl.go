@@ -221,7 +221,7 @@ func (hlsDl *HlsDl) Context(context func(ctx context.Context, network, addr stri
 
 func (hlsDl *HlsDl) Download() (string, error) {
   log.Println("download video now", hlsDl.hlsURL)
-  segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers)
+  segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers, hlsDl.client)
   if err != nil {
     return "", err
   }
@@ -243,7 +243,7 @@ func (hlsDl *HlsDl) Download() (string, error) {
 
 func (hlsDl *HlsDl) DownloadSegments() error {
   log.Println("download video segments now", hlsDl.hlsURL)
-  segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers)
+  segs, err := parseHlsSegments(hlsDl.hlsURL, hlsDl.headers, hlsDl.client)
   if err != nil {
     return err
   }
